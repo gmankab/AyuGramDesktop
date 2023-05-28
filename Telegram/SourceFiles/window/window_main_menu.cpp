@@ -790,14 +790,23 @@ void MainMenu::setupMenu() {
                 rpl::single(QString("SRead Messages")),
                 { &st::settingsIconForward, kIconPurple }
         )->setClickedCallback([=] {
-            auto settings = &AyuSettings::getInstance();
-            auto prev = settings->sendReadPackets;
-            settings->set_sendReadPackets(true);
+                auto callback = [=]{
+                    auto settings = &AyuSettings::getInstance();
+                    auto prev = settings->sendReadPackets;
+                    settings->set_sendReadPackets(true);
 
-            auto chats = controller->session().data().chatsList();
-            MarkAsReadChatListHack(chats);
+                    auto chats = controller->session().data().chatsList();
+                    MarkAsReadChatListHack(chats);
 
-            settings->set_sendReadPackets(prev);
+                    settings->set_sendReadPackets(prev);
+                };
+
+                _controller->show(
+                        Ui::MakeConfirmBox({
+                            .text = QString("Confirmation for SRead"),
+                            .confirmed = std::move(callback),
+                        }),
+                        Ui::LayerOption::CloseOther);
         });
 	} else {
 		addAction(

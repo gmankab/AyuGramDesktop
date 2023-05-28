@@ -53,6 +53,7 @@ void ConfirmBox(not_null<Ui::GenericBox*> box, ConfirmBoxArgs &&args) {
 		[=, c = prepareCallback(args.confirmed)]() {
 			lifetime->destroy();
 			c();
+            weak->closeBox();
 		},
 		args.confirmStyle ? *args.confirmStyle : defaultButtonStyle);
 	box->events(
