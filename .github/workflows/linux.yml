@@ -44,7 +44,7 @@ jobs:
     name: CentOS 7
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/${{ github.repository }}/centos_env
+      image: ghcr.io/telegramdesktop/tdesktop/centos_env
       credentials:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
@@ -57,12 +57,11 @@ jobs:
       matrix:
         defines:
           - ""
-          - "DESKTOP_APP_DISABLE_DBUS_INTEGRATION"
           - "DESKTOP_APP_DISABLE_X11_INTEGRATION"
           - "DESKTOP_APP_DISABLE_WAYLAND_INTEGRATION"
 
     env:
-      UPLOAD_ARTIFACT: "false"
+      UPLOAD_ARTIFACT: "true"
 
     steps:
       - name: Get repository name.
@@ -93,13 +92,14 @@ jobs:
           fi
 
           ./configure.sh \
-          -D CMAKE_C_FLAGS_DEBUG="" \
-          -D CMAKE_CXX_FLAGS_DEBUG="" \
+          -D CMAKE_C_FLAGS_RELEASE="" \
+          -D CMAKE_CXX_FLAGS_RELEASE="" \
           -D CMAKE_C_FLAGS="-Werror" \
           -D CMAKE_CXX_FLAGS="-Werror" \
           -D CMAKE_EXE_LINKER_FLAGS="-s" \
-          -D TDESKTOP_API_TEST=ON \
           -D DESKTOP_APP_DISABLE_CRASH_REPORTS=OFF \
+          -D TDESKTOP_API_ID=2040 \
+          -D TDESKTOP_API_HASH=b18441a1ff607e10a989891a5462e627 \
           $DEFINE
 
           cmake --build ../out --config Debug --parallel
