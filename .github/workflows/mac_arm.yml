@@ -121,7 +121,7 @@ jobs:
 
           cd ../out
 
-          xcoderun='xcodebuild build -project Telegram.xcodeproj -scheme Telegram -destination "platform=macOS,arch=arm64" -configuration Debug'
+          xcoderun='xcodebuild build -project Telegram.xcodeproj -scheme Telegram -destination "platform=macOS,name=Any Mac" -configuration Debug'
           bash -c "$xcoderun" || bash -c "$xcoderun" || bash -c "$xcoderun"
 
       - name: Move artifact.
