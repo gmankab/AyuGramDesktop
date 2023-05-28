@@ -114,6 +114,7 @@ https://github.com/telegramdesktop/tdesktop/blob/master/LEGAL
 #include <QtCore/QMimeData>
 #include <api/api_sending.h>
 #include <boxes/ayu/view_message_history.h>
+#include <styles/style_info.h>
 
 namespace {
 
@@ -2268,12 +2269,17 @@ void HistoryInner::showContextMenu(QContextMenuEvent *e, bool showFromTouch) {
 			}), isPinned ? &st::menuIconUnpin : &st::menuIconPin);
 		}
 
-        // ayu history action
-        _menu->addAction(QString("History"), [=]{
+        // ayu context menu options
+        auto ayuSubMenu = std::make_unique<Ui::PopupMenu>(this, st::popupMenuWithIcons);
+
+        ayuSubMenu->addAction(QString("History"), [=] {
             auto box = Box<MessageHistoryBox>();
             Ui::show(std::move(box));
+        }, &st::infoRoundedIconRecentActions);
 
-        }, &st::menuIconReport);
+        ayuSubMenu->addAction(QString("Hide"), [=]{}, &st::menuIconClear);
+
+        _menu->addAction(QString("AyuOptions"), std::move(ayuSubMenu), &st::menuIconSettings, &st::menuIconSettings);
 
 		const auto peer = item->history()->peer;
 		if (peer->isChat() || peer->isMegagroup()) {
